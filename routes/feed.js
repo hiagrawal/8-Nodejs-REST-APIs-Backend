@@ -15,4 +15,12 @@ router.post('/post', [
 
 router.get('/post/:postId', feedController.getPost);
 
+// Since in updating post, we are replacing the old post hence we will use PUT method
+// With normal browser forms that we were using earlier, we were not able to send it
+// But with asynchronous requests triggered by Javascript, we can use the same
+router.put('/post/:postId', [
+    body('title').trim().isLength({min: 5}),
+    body('content').trim().isLength({min: 5})
+], feedController.updatePost);
+
 module.exports = router;
