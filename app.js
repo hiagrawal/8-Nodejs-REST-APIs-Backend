@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -8,6 +10,7 @@ const app = express();
 
 //app.use(bodyParser.urlencoded()); //x-www-form-urlencoded <form>
 app.use(bodyParser.json()); //application/json
+app.use('/images', express.static(path.join(__dirname, 'images'))); //when it get path '/images', then go to images folder
 
 //this is required so that request from other domain can access our server, methods and they dont get CORS error
 app.use((req,res,next) => {
@@ -20,6 +23,13 @@ app.use((req,res,next) => {
 })
 
 app.use('/feed', feedRoutes);
+
+app.use((error, req, res, next) => {
+    console.log(error);
+    const message = error.message;
+    const status = error.statusCode || 500;
+    res.status(status).json({message: message});
+})
 
 mongoose.connect('mongodb+srv://MongoDbUser:MongoDbUser@cluster0.kij6e.mongodb.net/RESTAPI?retryWrites=true&w=majority')
 .then(result => {
