@@ -1,1 +1,3 @@
 - install express-validator for validation: npm install --save express-validator
+- install mongoose for database: npm install --save mongoose
+(timestamps paramter while defining schema model automatically adds createdAt and updatedAt fields)
