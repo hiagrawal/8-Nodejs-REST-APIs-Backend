@@ -3,13 +3,35 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const { v4: uuidv4 } = require('uuid');
 
 const feedRoutes = require('./routes/feed');
 
 const app = express();
 
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images');
+    },
+    filename: (req, file, cb) => {
+        //cb(null, new Date().toISOString() + '-' + file.originalname);
+        cb(null, uuidv4() + '-' + file.originalname)
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype=== 'image/png' || file.mimetype=== 'image/png' || file.mimetype=== 'image/png'){
+        cb(null, true);
+    }
+    else{
+        cb(null, false);
+    }
+}
+
 //app.use(bodyParser.urlencoded()); //x-www-form-urlencoded <form>
 app.use(bodyParser.json()); //application/json
+app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image')); //'image' is the field name in which it is getting the image that we have set in frontend 'formData' 'image' field 
 app.use('/images', express.static(path.join(__dirname, 'images'))); //when it get path '/images', then go to images folder
 
 //this is required so that request from other domain can access our server, methods and they dont get CORS error
