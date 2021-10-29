@@ -52,7 +52,8 @@ app.use((error, req, res, next) => {
     console.log(error);
     const message = error.message;
     const status = error.statusCode || 500;
-    res.status(status).json({message: message});
+    const data = error.data;
+    res.status(status).json({message: message, data: data});
 })
 
 mongoose.connect('mongodb+srv://MongoDbUser:MongoDbUser@cluster0.kij6e.mongodb.net/RESTAPI?retryWrites=true&w=majority')
