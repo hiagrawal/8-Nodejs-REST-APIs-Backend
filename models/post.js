@@ -19,6 +19,7 @@ const postSchema = new Schema({
         required: true
     }    
 }, {timestamps: true});
+//(timestamps paramter while defining schema model automatically adds createdAt and updatedAt fields)
 
 module.exports = mongoose.model('Post', postSchema);
 

@@ -1,6 +1,5 @@
 - install express-validator for validation: npm install --save express-validator
 - install mongoose for database: npm install --save mongoose
-(timestamps paramter while defining schema model automatically adds createdAt and updatedAt fields)
 - install multer for parsing image : npm install --save multer
-- install uuid for date fix with images: npm install --save uuid
-
+- install uuid to generate a unique id for date fix with images: npm install --save uuid
+- install bcryptjs which allows us to hash a password in a secure way : npm install --save bcryptjs
