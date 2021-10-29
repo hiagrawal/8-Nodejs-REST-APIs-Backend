@@ -3,3 +3,4 @@
 - install multer for parsing image : npm install --save multer
 - install uuid to generate a unique id for date fix with images: npm install --save uuid
 - install bcryptjs which allows us to hash a password in a secure way : npm install --save bcryptjs
+- install jsonwebtoken for creating json web tokens used for authentication: npm install --save jsonwebtoken

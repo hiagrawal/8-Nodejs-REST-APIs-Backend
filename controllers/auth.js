@@ -1,6 +1,7 @@
 const {validationResult} = require('express-validator');
 
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
@@ -55,7 +56,23 @@ exports.login = (req, res, next) => {
             error.statusCode = 401; //401 refers to authentication error
             throw error;
         }
-    
+    //sign method is used to generate the json token signature. It takes first argument as some data so that it uses the data 
+    //to generate the token so if data changes, token also changes so it becomes more secure
+    //make a note that this data is exposed to the client and stored in client's browser so some sensitive information should not be passed there
+    //we can check the same in debugger tools 'Application' tab -> Storage -> Local Storage
+    //second paramter is secret key which is used to validate the token (can check at https://jwt.io/)
+    //we can paste the token at https://jwt.io/ and check the payload data there. so anyone can see that data 
+    //We can double check by enter the secret key and data and get that token on the left
+    //If we change data or secret key there, token also gets changed
+    //Third is optional paramter wherein we can give expiresIn property so even if this token gets compromised, it will be 
+    //valid only for an hour and hence adds more security
+    const token = jwt.sign({
+        email: loadedUser.email,
+        userId: loadedUser._id.toString()
+    }, 'somesupersupersecretkey', {expiresIn: '1h'} )
+
+    res.status(200).json({token: token, userId: loadedUser._id.toString()})
+
     })
     .catch(err => {
         if(!err.statusCode){
