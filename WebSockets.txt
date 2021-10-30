@@ -79,6 +79,22 @@ const socket = openSocket('http://localhost:8080', { transports : ['websocket'] 
 
 -----------------------------------------------------------------------------------------------------------------
 
+Wrap up: 
+
+So using socketio, we can push information from server to client through emit, broadcast method
+and socket io is not the only way
+it uses websockets only and that is the key to push information
+and socket io is just a popular package to do the same 
+
+and websockets is built up on http, it is a handshake so we need a running http server to establish a websocket connection
+and both run simultaneously
+
+Useful resources:
+
+Socket.io Official Docs: https://socket.io/get-started/chat/
+
+Alternative Websocket Library: https://www.npmjs.com/package/express-ws
+
 
 
 
