@@ -5,6 +5,7 @@ const {validationResult} = require('express-validator/check');
 
 const Post = require('../models/post');
 const User = require('../models/user');
+const io = require('../socket');
 
 exports.getPosts = async (req, res, next) => {
     const currentPage = req.query.page || 1;
@@ -88,6 +89,7 @@ exports.createPost = (req, res, next) => {
     })
     .then(result => {
         console.log(result);
+        io.getIO().emit('postCreatedEvent', {action: 'create', post: post});
         res.status(201).json({
             message: 'Post created successfully!',
             post: post,

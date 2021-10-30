@@ -33,3 +33,27 @@ and on the client side, we give the url to this connection:
 - So specify a neutral transportation method at the client side, like this: { transports : ['websocket'] }
 
 openSocket('http://localhost:8080', { transports : ['websocket'] });
+
+- now when any new item is added, we want to send it to all users. for this, we can use socket.io
+- for this, we have two methods: emit() and broadcast()
+- emit() is used to send to all connected users
+- and broadcast() is used to send to all connected users except the one from which this request was sent that is who is creating it
+
+and inside this method, we can send anything anything we want, any message, data, notification anything
+- for this, we can define an event of any name and then data object of any paramter that will be ued by client
+
+const io = require('../socket');
+io.getIO().emit('postCreatedEvent', {action: 'create', post: post});
+
+and now on the client side, can call this event on compoent mount
+
+const socket = openSocket('http://localhost:8080', { transports : ['websocket'] });
+    socket.on('postCreatedEvent', data=> {
+      if(data.action == 'create'){
+        this.addPost(data.post);
+      }
+    })
+
+
+
+
