@@ -58,7 +58,13 @@ app.use((error, req, res, next) => {
 
 mongoose.connect('mongodb+srv://MongoDbUser:MongoDbUser@cluster0.kij6e.mongodb.net/RESTAPI?retryWrites=true&w=majority')
 .then(result => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('socket.io')(server); 
+    //socket io is built on websockets protocol which is built up on http so we passes server as an argument which is a http server
+    //and we get couple of event listeners, one is to wait for new connections so whenever a client gets connected, everytime this gets fired
+    io.on('connection', socket => {
+        console.log('Client conneted!');
+    })
 })
 .catch(err => {
     console.log(err);
