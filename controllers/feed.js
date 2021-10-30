@@ -6,28 +6,43 @@ const {validationResult} = require('express-validator/check');
 const Post = require('../models/post');
 const User = require('../models/user');
 
-exports.getPosts = (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
     const currentPage = req.query.page || 1;
     const perPage = 2;
     let totalItems;
-    Post.find().countDocuments().then(count => {
-        totalItems = count;
-        return Post.find().skip((currentPage - 1) * perPage).limit(perPage);
-    })
-    .then(posts => {
-        if(!posts){
-            const error = new Error('No Post Found'); //this msg will automatically be set in error 'message' field
-            error.statusCode = 404; //storing status in any paramter lets say statusCode
-            throw error; //we are throwing here irrespective of inside async call coz this will throw and go to catch where we are doing next to this will work as we want
-        }
+
+    //using promises
+    // Post.find().countDocuments().then(count => {
+    //     totalItems = count;
+    //     return Post.find().populate('creator').skip((currentPage - 1) * perPage).limit(perPage);
+    // })
+    // .then(posts => {
+    //     if(!posts){
+    //         const error = new Error('No Post Found'); //this msg will automatically be set in error 'message' field
+    //         error.statusCode = 404; //storing status in any paramter lets say statusCode
+    //         throw error; //we are throwing here irrespective of inside async call coz this will throw and go to catch where we are doing next to this will work as we want
+    //     }
+    //     res.status(200).json({message: 'Fetched Posts successfully!', posts: posts, totalItems: totalItems});
+    // })
+    // .catch(err => {
+    //     if(!err.statusCode){
+    //         err.statusCode = 500;
+    //     }
+    //     next(err); //throwing an error from here to go the common error handler in app js
+    // })
+
+    //using async await
+    try{
+        totalItems = await Post.find().countDocuments();
+        const posts = await Post.find().populate('creator').skip((currentPage - 1) * perPage).limit(perPage);
         res.status(200).json({message: 'Fetched Posts successfully!', posts: posts, totalItems: totalItems});
-    })
-    .catch(err => {
+    }
+    catch(err){
         if(!err.statusCode){
             err.statusCode = 500;
         }
-        next(err); //throwing an error from here to go the common error handler in app js
-    })
+        next(err); 
+    }    
 };
 
 //status 200 is just success, status 201 indicates that we created/added something which is more significant
